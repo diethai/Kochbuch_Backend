@@ -6,8 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface RezeptRepository extends CrudRepository {
+public interface RezeptRepository extends CrudRepository<Rezept, Long> {
 
     Optional<Rezept> findById(Long id);
-    Optional<Rezept> findByName(String name);
+
 }

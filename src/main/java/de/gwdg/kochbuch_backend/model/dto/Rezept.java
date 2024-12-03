@@ -1,5 +1,9 @@
 package de.gwdg.kochbuch_backend.model.dto;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,9 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table
-@Getter
-@Setter
+@Table (name = "rezepte") // specify the name of the table
+@Getter // automatisch erstellte get-Methods
+@Setter // automatisch erstellte set-Methods
 @NoArgsConstructor
 @AllArgsConstructor
 public class Rezept {
@@ -24,11 +28,12 @@ public class Rezept {
     private String titel;
 
     @NotNull(message = "Die Beschreibung darf nicht leer sein")
-    @Column(length = 5000)
+    @Column(length = 150)
     private String beschreibung;
 
-    @NotBlank(message = "Der Autor darf nicht leer sein")
-    private String autor;
+    @ManyToOne // mehrere Rezepte können zu einem Autor gehören
+    @JoinColumn(name = "autorID", referencedColumnName = "id")
+    private Autor autor;
 
     private double zubereitungszeit; // in Minuten
 }

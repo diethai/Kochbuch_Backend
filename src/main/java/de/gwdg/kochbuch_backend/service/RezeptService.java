@@ -3,6 +3,7 @@ package de.gwdg.kochbuch_backend.service;
 import de.gwdg.kochbuch_backend.model.dao.RezeptRepository;
 import de.gwdg.kochbuch_backend.model.dto.Rezept;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,9 @@ public class RezeptService {
     }
 
     //Create: nimmt ein Rezept Objekt entgegen und speichert dieses in die Oracle Datenbank
+    @Transactional //Datenbank-Operation können nicht mehr gleichzeitig durchgeführt werden
     public Rezept createRezept(Rezept rezept) {
-        return (Rezept) rezeptRepository.save(rezept);
+        return rezeptRepository.save(rezept);
     }
 
     //Read: liest alle Rezept Objekte aus der Datenbank
@@ -42,7 +44,6 @@ public class RezeptService {
         // Felder aktualisieren
         existingRezept.setTitel(rezept.getTitel());
         existingRezept.setBeschreibung(rezept.getBeschreibung());
-        existingRezept.setAutor(rezept.getAutor());
         existingRezept.setZubereitungszeit(rezept.getZubereitungszeit());
 
         // Speichern der Änderungen
