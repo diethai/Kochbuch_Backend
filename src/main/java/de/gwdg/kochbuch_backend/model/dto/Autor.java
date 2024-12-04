@@ -22,7 +22,7 @@ public class Autor {         /* Die Klasse "Autor" wird definiert */
     @GeneratedValue(strategy = GenerationType.IDENTITY) /* Die ID wird automatisch generiert */
     private long id; /* Die ID ist eine Ganzzahl */
 
-    private String AutorName; /* Der Name des Autors ist eine Zeichenkette */
+    private String autorName; /* Der Name des Autors ist eine Zeichenkette */
 
 }
 

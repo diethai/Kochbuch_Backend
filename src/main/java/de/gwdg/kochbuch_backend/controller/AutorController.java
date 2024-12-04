@@ -3,6 +3,7 @@ package de.gwdg.kochbuch_backend.controller; /* Package-Name der Klasse */
 import de.gwdg.kochbuch_backend.model.dto.Autor; /* Import der Autor-Klasse */
 import de.gwdg.kochbuch_backend.service.AutorService; /* Import der AutorService-Klasse */
 import jakarta.persistence.EntityNotFoundException; /* Import der EntityNotFoundException-Klasse */
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid; /* Import der Valid-Annotation */
 import org.springframework.beans.factory.annotation.Autowired; /* Import der Autowiring-Funktion von Spring */
 import org.springframework.http.HttpStatus; /* Import der HttpStatus-Klasse */
@@ -67,5 +68,13 @@ public class AutorController {                                       /* Die Klas
         } catch (EntityNotFoundException e) {                                          /* Die Ausnahme wird gefangen, wenn der Autor nicht gefunden wird */
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);                         /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
         }
+    }
+
+    // Um mehrere Autoren gleichzeitig der DB hinzuzufügen
+    @PostMapping("/many")
+    @Transactional
+    public ResponseEntity<List<Autor>> createManyAutoren(@RequestBody List<Autor> autoren) {
+        List<Autor> neueAutoren = autorService.createManyAutoren(autoren);
+        return new ResponseEntity<>(neueAutoren, HttpStatus.CREATED);
     }
 }

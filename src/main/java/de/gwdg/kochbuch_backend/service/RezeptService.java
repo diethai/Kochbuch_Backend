@@ -61,4 +61,10 @@ public class RezeptService {
         rezeptRepository.deleteById(id);
     }
 
+    // Create: mehrere Rezepte auf einmal erstellen
+    @Transactional
+    public List<Rezept> createRezepte(List<Rezept> rezepte) {
+        return (List<Rezept>) rezeptRepository.saveAll(rezepte);
+    }
+
 }

@@ -3,6 +3,7 @@ package de.gwdg.kochbuch_backend.controller;
 import de.gwdg.kochbuch_backend.model.dto.Rezept;
 import de.gwdg.kochbuch_backend.service.RezeptService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,5 +68,13 @@ public class RezeptController {
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found
         }
+    }
+
+    // Create: Mehrere Rezepte auf einmal erstellen
+    @Transactional
+    @PostMapping("/multiple")
+    public ResponseEntity<List<Rezept>> createRezepte(@RequestBody List<Rezept> rezepte) {
+        List<Rezept> neueRezepte = rezeptService.createRezepte(rezepte);
+        return new ResponseEntity<>(neueRezepte, HttpStatus.CREATED); // 201 Created
     }
 }
