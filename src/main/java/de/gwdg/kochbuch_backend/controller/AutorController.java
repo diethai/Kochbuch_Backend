@@ -1,68 +1,71 @@
-package de.gwdg.kochbuch_backend.controller; // Pfad der Datei in welchem package wir uns befinden
+package de.gwdg.kochbuch_backend.controller; /* Package-Name der Klasse */
 
-import de.gwdg.kochbuch_backend.model.dto.Autor; // import des dto Autor aus dem Ordner model
-import de.gwdg.kochbuch_backend.service.AutorService; // import des AutorService aus dem Ordner service
-import jakarta.validation.Valid; // wird verwendet, um die Validierung von Objekten zu ermöglichen.
-import org.springframework.beans.factory.annotation.Autowired; //wird verwendet, um die Autowiring-Funktion von Spring zu ermöglichen.
-import org.springframework.http.HttpStatus; // wird verwendet, um die HTTP-Status-Codes von Spring zu ermöglichen.
-import org.springframework.http.ResponseEntity; // wird verwendet, um die ResponseEntity-Klasse von Spring zu ermöglichen.
-import org.springframework.web.bind.annotation.*; // wird verwendet, um alle Annotationen von Spring Web zu ermöglichen.
+import de.gwdg.kochbuch_backend.model.dto.Autor; /* Import der Autor-Klasse */
+import de.gwdg.kochbuch_backend.service.AutorService; /* Import der AutorService-Klasse */
+import jakarta.persistence.EntityNotFoundException; /* Import der EntityNotFoundException-Klasse */
+import jakarta.validation.Valid; /* Import der Valid-Annotation */
+import org.springframework.beans.factory.annotation.Autowired; /* Import der Autowiring-Funktion von Spring */
+import org.springframework.http.HttpStatus; /* Import der HttpStatus-Klasse */
+import org.springframework.http.ResponseEntity; /* Import der ResponseEntity-Klasse */
+import org.springframework.web.bind.annotation.*; /* Import der Annotationen von Spring Web */
 
-import java.util.List; // Diese Klasse wird verwendet, um eine Liste von Objekten zu erstellen.
+import java.util.List; /* Import der List-Klasse */
 
-@RestController                                             /* Hier wird die AutorController-Klasse definiert. */
-@RequestMapping("/api/autoren")                          /* Die @RestController-Annotation wird verwendet, um die Klasse als Controller zu markieren. */
-public class AutorController {                             /* Die @RequestMapping-Annotation wird verwendet, um die URL /api/autoren als Endpunkt für die Anfragen zu markieren. */
+@RestController                                                      /* Die Klasse ist ein Controller */
+@RequestMapping("/api/autoren")                                    /* Die URL /api/autoren ist der Endpunkt für die Anfragen */
+public class AutorController {                                       /* Die Klasse AutorController wird definiert */
 
-    private final AutorService autorService;               /* Hier wird die AutorService-Instanz als Feld der AutorController-Klasse definiert. */
+    private final AutorService autorService;                         /* Die AutorService-Instanz wird als Feld der Klasse definiert */
 
-    @Autowired                                             /* Hier wird die Autowiring-Funktion von Spring verwendet, um die AutorService-Instanz zu injectieren. */
+    @Autowired                                                       /* Die Autowiring-Funktion von Spring wird verwendet, um die AutorService-Instanz zu injectieren */
     public AutorController(AutorService autorService) {
         this.autorService = autorService;
     }
 
     // Erstelle einen neuen Autor
-    @PostMapping                                                                                             /* Hier wird die @PostMapping-Annotation verwendet, um die Methode als Endpunkt für die POST-Anfragen zu markieren. */
-    public ResponseEntity<Autor> createAutor(@Valid @RequestBody Autor autor) {                                 /* Hier wird die @Valid-Annotation verwendet, um die Validierung des Autor-Objekts zu ermöglichen. */
-        return ResponseEntity.status(HttpStatus.CREATED).body(autorService.createAutor(autor));                 /* Hier wird die ResponseEntity-Klasse verwendet, um die Antwort auf die Anfrage zu erstellen. */
+    @PostMapping                                                                /* Die Methode ist der Endpunkt für die POST-Anfragen */
+    public ResponseEntity<Autor> createAutor(@RequestBody Autor autor) {           /* Die @RequestBody-Annotation wird verwendet, um das Autor-Objekt als Körper der Anfrage zu markieren */
+        Autor neuerAutor = autorService.createAutor(autor);                        /* Die AutorService-Instanz wird verwendet, um den neuen Autor zu erstellen */
+        return new ResponseEntity<>(neuerAutor, HttpStatus.CREATED);               /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
     }
 
-    // Lies alle Autoren
-    @GetMapping                                                                                              /* Hier wird die @GetMapping-Annotation verwendet, um die Methode als Endpunkt für die GET-Anfragen zu markieren. */
-    public ResponseEntity<List<Autor>> getAllAutoren() {                                                        /* Hier wird die ResponseEntity-Klasse verwendet, um die Antwort auf die Anfrage zu erstellen. */
-        return ResponseEntity.ok(autorService.getAllAutoren());                                                 /* Hier wird die AutorService-Instanz verwendet, um die Liste der Autoren zu erhalten. */
+    // Read: Alle Autoren abrufen
+    @GetMapping                                                                 /* Die Methode ist der Endpunkt für die GET-Anfragen */
+    public ResponseEntity<List<Autor>> getAllAutoren() {                           /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
+        List<Autor> autoren = autorService.getAllAutoren();                        /* Die AutorService-Instanz wird verwendet, um die Liste der Autoren zu erhalten */
+        return new ResponseEntity<>(autoren, HttpStatus.OK);                       /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
     }
 
-    // Lies einen Autor mit der spezifischen ID
-    @GetMapping("/{id}")                                                                                    /* @GetMapping-Annotation wird verwendet, um die Methode als Endpunkt für die GET-Anfragen zu markieren. */
-    public ResponseEntity<Autor> getAutorByID(@PathVariable Long id) {                                        /* @PathVariable-Annotation wird verwendet, um den id-Parameter als Pfad-Parameter zu markieren. */
-        try {                                                                                                 /* try-catch-Block wird verwendet, um die Ausnahme zu fangen, wenn der Autor nicht gefunden wird. */
-            return ResponseEntity.ok(autorService.getAutorByID(id));                                          /* AutorService-Instanz verwendet, um den Autor zu erhalten. */
-        } catch (Exception e) {                                                                               /* Ausnahme abgefangen, wenn der Autor nicht gefunden wird. */
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();                                       /* ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen. */
+    // Read: Einzelnes Autor nach ID abrufen
+    @GetMapping("/{id}")                                                         /* Die Methode ist der Endpunkt für die GET-Anfragen mit einem ID-Parameter */
+    public ResponseEntity<Autor> getAutorByID(@PathVariable Long id) {              /* Der @PathVariable-Annotation wird verwendet, um den ID-Parameter zu markieren */
+        try {                                                                       /* Ein try-catch-Block wird verwendet, um die Ausnahme zu fangen, wenn der Autor nicht gefunden wird */
+            Autor autor = autorService.getAutorByID(id);                            /* Die AutorService-Instanz wird verwendet, um den Autor zu erhalten */
+            return new ResponseEntity<>(autor, HttpStatus.OK);                      /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
+        } catch (EntityNotFoundException e) {                                       /* Die Ausnahme wird gefangen, wenn der Autor nicht gefunden wird */
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);                      /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
         }
     }
 
-    // Aktualisiere einen Autor
-    @PutMapping("/{id}")                                                                                  /* @PutMapping-Annotation wird verwendet, um die Methode als Endpunkt für die PUT-Anfragen zu markieren. */
-    public ResponseEntity<Autor> updateAutor(@PathVariable Long id, @Valid @RequestBody Autor autor) {      /* @Valid-Annotation wird verwendet, um die Validierung des Autor-Objekts zu ermöglichen. */
-        try {                                                                                               /* try-catch-Block wird verwendet, um die Ausnahme zu fangen, wenn der Autor nicht gefunden wird. */
-            Autor existingAutor = autorService.getAutorByID(id);                                            /* AutorService-Instanz wird verwendet, um den Autor zu erhalten. */
-            existingAutor.setAutorName(autor.getAutorName());                                               /* Autor-Name des Autor-Objekts wird aktualisiert. */
-            return ResponseEntity.ok(autorService.updateAutor(existingAutor));                              /* AutorService-Instanz wird verwendet, um den Autor zu aktualisieren. */
-        } catch (Exception e) {                                                                             /* Ausnahme wird gefangen, wenn der Autor nicht gefunden wird. */
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();                                     /* ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen. */
+    // Update: Autor aktualisieren
+    @PutMapping("/{id}")                                                                                     /* Die Methode ist der Endpunkt für die PUT-Anfragen */
+    public ResponseEntity<Autor> updateAutor(@PathVariable Long id, @Valid @RequestBody Autor autor) {          /* Der @PathVariable-Annotation wird verwendet, um den ID-Parameter zu markieren */
+        try {                                                                                                   /* Ein try-catch-Block wird verwendet, um die Ausnahme zu fangen, wenn der Autor nicht gefunden wird */
+            Autor aktualisiertAutor = autorService.updateAutor(autor);                                          /* Die AutorService-Instanz wird verwendet, um den Autor zu aktualisieren */
+            return new ResponseEntity<>(aktualisiertAutor, HttpStatus.OK);                                      /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
+        } catch (EntityNotFoundException e) {                                                                   /* Die Ausnahme wird gefangen, wenn der Autor nicht gefunden wird */
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);                                                  /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
         }
     }
 
-    // Lösche einen Autor
-    @DeleteMapping("/{id}")                                                                                 /* @DeleteMapping-Annotation wird verwendet, um die Methode als Endpunkt für die DELETE-Anfragen zu markieren. */
-    public ResponseEntity<Void> deleteAutor(@PathVariable Long id) {                                          /* @PathVariable-Annotation wird verwendet, um den id-Parameter als Pfad-Parameter zu markieren. */
-        try {                                                                                                 /* try-catch-Block wird verwendet, um die Ausnahme zu fangen, wenn der Autor nicht gefunden wird. */
-            autorService.deleteAutor(id);                                                                     /* AutorService-Instanz wird verwendet, um den Autor zu löschen. */
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();                                      /* ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen. */
-        } catch (Exception e) {                                                                               /* Ausnahme wird gefangen, wenn der Autor nicht gefunden wird. */
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();                                       /* ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen. */
+    // Delete: Autor löschen
+    @DeleteMapping("/{id}")                                                         /* Die Methode ist der Endpunkt für die DELETE-Anfragen */
+    public ResponseEntity<Void> deleteAutor(@PathVariable Long id) {                   /* Der @PathVariable-Annotation wird verwendet, um den ID-Parameter zu markieren */
+        try {                                                                          /* Ein try-catch-Block wird verwendet, um die Ausnahme zu fangen, wenn der Autor nicht gefunden wird */
+            autorService.deleteAutor(id);                                              /* Die AutorService-Instanz wird verwendet, um den Autor zu löschen */
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);                        /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
+        } catch (EntityNotFoundException e) {                                          /* Die Ausnahme wird gefangen, wenn der Autor nicht gefunden wird */
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);                         /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
         }
     }
 }
