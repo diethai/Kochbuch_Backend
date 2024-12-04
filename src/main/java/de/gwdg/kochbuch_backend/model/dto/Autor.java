@@ -26,4 +26,4 @@ public class Autor {         /* Die Klasse "Autor" wird definiert */
 
 }
 
-}
+
