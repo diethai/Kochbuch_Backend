@@ -1,0 +1,17 @@
+= Autor und Rezept Menu Guide
+
+== Overview
+
+Dieses Dokument beschreibt die verschiedenen Möglichjeute, mit dem Autor und Rezept Controller zu interagieren.
+
+== Endpoints
+
+=== GET /api/autoren/getAll
+* Beschreibung: Holt alle Autoren aus der Datenbank
+* Anforderung: Keine
+* Antwort: eine Liste von Benutzern
+
+==== Example HTTP Request
+
+
+

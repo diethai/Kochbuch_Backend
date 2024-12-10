@@ -24,21 +24,21 @@ public class AutorController {                                       /* Die Klas
     }
 
     // Erstelle einen neuen Autor
-    @PostMapping                                                                /* Die Methode ist der Endpunkt für die POST-Anfragen */
+    @PostMapping ("/create")                                                               /* Die Methode ist der Endpunkt für die POST-Anfragen */
     public ResponseEntity<Autor> createAutor(@RequestBody Autor autor) {           /* Die @RequestBody-Annotation wird verwendet, um das Autor-Objekt als Körper der Anfrage zu markieren */
         Autor neuerAutor = autorService.createAutor(autor);                        /* Die AutorService-Instanz wird verwendet, um den neuen Autor zu erstellen */
         return new ResponseEntity<>(neuerAutor, HttpStatus.CREATED);               /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
     }
 
     // Read: Alle Autoren abrufen
-    @GetMapping                                                                 /* Die Methode ist der Endpunkt für die GET-Anfragen */
+    @GetMapping    ("/getAll")                                                             /* Die Methode ist der Endpunkt für die GET-Anfragen */
     public ResponseEntity<List<Autor>> getAllAutoren() {                           /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
         List<Autor> autoren = autorService.getAllAutoren();                        /* Die AutorService-Instanz wird verwendet, um die Liste der Autoren zu erhalten */
         return new ResponseEntity<>(autoren, HttpStatus.OK);                       /* Die ResponseEntity-Klasse wird verwendet, um die Antwort auf die Anfrage zu erstellen */
     }
 
     // Read: Einzelnes Autor nach ID abrufen
-    @GetMapping("/{id}")                                                         /* Die Methode ist der Endpunkt für die GET-Anfragen mit einem ID-Parameter */
+    @GetMapping("/get/{id}")                                                         /* Die Methode ist der Endpunkt für die GET-Anfragen mit einem ID-Parameter */
     public ResponseEntity<Autor> getAutorByID(@PathVariable Long id) {              /* Der @PathVariable-Annotation wird verwendet, um den ID-Parameter zu markieren */
         try {                                                                       /* Ein try-catch-Block wird verwendet, um die Ausnahme zu fangen, wenn der Autor nicht gefunden wird */
             Autor autor = autorService.getAutorByID(id);                            /* Die AutorService-Instanz wird verwendet, um den Autor zu erhalten */
@@ -49,7 +49,7 @@ public class AutorController {                                       /* Die Klas
     }
 
     // Update: Autor aktualisieren
-    @PutMapping("/{id}")                                                                                     /* Die Methode ist der Endpunkt für die PUT-Anfragen */
+    @PutMapping("/update/{id}")                                                                                     /* Die Methode ist der Endpunkt für die PUT-Anfragen */
     public ResponseEntity<Autor> updateAutor(@PathVariable Long id, @Valid @RequestBody Autor autor) {          /* Der @PathVariable-Annotation wird verwendet, um den ID-Parameter zu markieren */
         try {                                                                                                   /* Ein try-catch-Block wird verwendet, um die Ausnahme zu fangen, wenn der Autor nicht gefunden wird */
             Autor aktualisiertAutor = autorService.updateAutor(autor);                                          /* Die AutorService-Instanz wird verwendet, um den Autor zu aktualisieren */
@@ -60,7 +60,7 @@ public class AutorController {                                       /* Die Klas
     }
 
     // Delete: Autor löschen
-    @DeleteMapping("/{id}")                                                         /* Die Methode ist der Endpunkt für die DELETE-Anfragen */
+    @DeleteMapping("/delete/{id}")                                                         /* Die Methode ist der Endpunkt für die DELETE-Anfragen */
     public ResponseEntity<Void> deleteAutor(@PathVariable Long id) {                   /* Der @PathVariable-Annotation wird verwendet, um den ID-Parameter zu markieren */
         try {                                                                          /* Ein try-catch-Block wird verwendet, um die Ausnahme zu fangen, wenn der Autor nicht gefunden wird */
             autorService.deleteAutor(id);                                              /* Die AutorService-Instanz wird verwendet, um den Autor zu löschen */
@@ -71,7 +71,7 @@ public class AutorController {                                       /* Die Klas
     }
 
     // Um mehrere Autoren gleichzeitig der DB hinzuzufügen
-    @PostMapping("/many")
+    @PostMapping("create/many")
     @Transactional
     public ResponseEntity<List<Autor>> createManyAutoren(@RequestBody List<Autor> autoren) {
         List<Autor> neueAutoren = autorService.createManyAutoren(autoren);
