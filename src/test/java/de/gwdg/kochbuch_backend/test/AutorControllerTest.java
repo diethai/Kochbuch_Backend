@@ -3,9 +3,9 @@ package de.gwdg.kochbuch_backend.test;
 import de.gwdg.kochbuch_backend.controller.AutorController;
 import de.gwdg.kochbuch_backend.model.dto.Autor;
 import de.gwdg.kochbuch_backend.service.AutorService;
-import de.gwdg.kochbuch_backend.setup.AutorTestObjects;
+
 import de.gwdg.kochbuch_backend.setup.builder.AutorOptionsObject;
-import org.junit.jupiter.api.Disabled;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

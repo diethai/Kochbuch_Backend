@@ -23,6 +23,7 @@ public class AutorController {                                       /* Die Klas
         this.autorService = autorService;
     }
 
+
     // Erstelle einen neuen Autor
     @PostMapping ("/create")                                                               /* Die Methode ist der Endpunkt für die POST-Anfragen */
     public ResponseEntity<Autor> createAutor(@RequestBody Autor autor) {           /* Die @RequestBody-Annotation wird verwendet, um das Autor-Objekt als Körper der Anfrage zu markieren */
@@ -70,11 +71,14 @@ public class AutorController {                                       /* Die Klas
         }
     }
 
-    // Um mehrere Autoren gleichzeitig der DB hinzuzufügen
+    // Endpunkt für die POST-Anfrage zum Erstellen mehrerer Autoren gleichzeitig
     @PostMapping("create/many")
-    @Transactional
+    @Transactional                                                                               //Die Transaktion wird verwendet, um sicherzustellen, dass alle Autoren gleichzeitig in die Datenbank hinzugefügt werden
     public ResponseEntity<List<Autor>> createManyAutoren(@RequestBody List<Autor> autoren) {
+        // Erstelle eine Liste der neuen Autoren
         List<Autor> neueAutoren = autorService.createManyAutoren(autoren);
+        // Richte eine erfolgreiche Antwort mit den neuen Autoren ein
         return new ResponseEntity<>(neueAutoren, HttpStatus.CREATED);
     }
+
 }
