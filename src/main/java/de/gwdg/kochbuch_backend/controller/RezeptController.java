@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/rezepte") // Basis-URL für alle Endpunkte
@@ -76,5 +77,14 @@ public class RezeptController {
     public ResponseEntity<List<Rezept>> createRezepte(@RequestBody List<Rezept> rezepte) {
         List<Rezept> neueRezepte = rezeptService.createRezepte(rezepte);
         return new ResponseEntity<>(neueRezepte, HttpStatus.CREATED); // 201 Created
+    }
+
+    @GetMapping("/author/{authorName}")
+    public ResponseEntity<Optional<Rezept>> getRezepteByAuthor(@PathVariable long id) {
+        Optional<Rezept> rezepte = rezeptService.getRezepteDesAutors(id);
+        if (rezepte.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found, falls keine Rezepte gefunden wurden
+        }
+        return new ResponseEntity<>(rezepte, HttpStatus.OK); // 200 OK
     }
 }

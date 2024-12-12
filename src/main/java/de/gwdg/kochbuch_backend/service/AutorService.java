@@ -2,6 +2,7 @@ package de.gwdg.kochbuch_backend.service;
 
 import de.gwdg.kochbuch_backend.model.dao.AutorRepository;
 import de.gwdg.kochbuch_backend.model.dto.Autor;
+import de.gwdg.kochbuch_backend.model.dto.Rezept;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,12 +60,14 @@ public class AutorService {
         // Löschen des Autors
         autorRepository.deleteById(id);
     }
-
     // Um eine Liste an Autoren der DB hinzuzufügen
     @Transactional
     public List<Autor> createManyAutoren(List<Autor> autoren) {
         return (List<Autor>) autorRepository.saveAll(autoren);
     }
+
+
+
 }
 
 

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RezeptService {
@@ -65,6 +66,12 @@ public class RezeptService {
     @Transactional
     public List<Rezept> createRezepte(List<Rezept> rezepte) {
         return (List<Rezept>) rezeptRepository.saveAll(rezepte);
+    }
+
+    // Liest alle Rezepte eines Autors aus der Datenbank
+    public Optional<Rezept> getRezepteDesAutors(Long autorId) {
+        // Rufe die Methode aus dem RezeptRepository auf, um alle Rezepte des Autors zu erhalten
+        return rezeptRepository.findById(autorId);
     }
 
 }

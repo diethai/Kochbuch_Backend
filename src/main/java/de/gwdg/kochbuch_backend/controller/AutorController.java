@@ -1,6 +1,7 @@
 package de.gwdg.kochbuch_backend.controller; /* Package-Name der Klasse */
 
 import de.gwdg.kochbuch_backend.model.dto.Autor; /* Import der Autor-Klasse */
+import de.gwdg.kochbuch_backend.model.dto.Rezept;
 import de.gwdg.kochbuch_backend.service.AutorService; /* Import der AutorService-Klasse */
 import jakarta.persistence.EntityNotFoundException; /* Import der EntityNotFoundException-Klasse */
 import jakarta.transaction.Transactional;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus; /* Import der HttpStatus-Klasse */
 import org.springframework.http.ResponseEntity; /* Import der ResponseEntity-Klasse */
 import org.springframework.web.bind.annotation.*; /* Import der Annotationen von Spring Web */
 
+import javax.swing.text.Document;
 import java.util.List; /* Import der List-Klasse */
 
 @RestController                                                      /* Die Klasse ist ein Controller */
@@ -80,5 +82,6 @@ public class AutorController {                                       /* Die Klas
         // Richte eine erfolgreiche Antwort mit den neuen Autoren ein
         return new ResponseEntity<>(neueAutoren, HttpStatus.CREATED);
     }
+
 
 }

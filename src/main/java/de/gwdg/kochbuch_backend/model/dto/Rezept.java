@@ -12,6 +12,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Entity
 @Table (name = "rezepte") // specify the name of the table
 @Getter // automatisch erstellte get-Methods
@@ -30,6 +35,11 @@ public class Rezept {
     @NotNull(message = "Die Beschreibung darf nicht leer sein")
     @Column(length = 150)
     private String beschreibung;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "rezept_id")
+    private List<Rezeptzutat> rezeptzutaten = new ArrayList<>();
+
 
     @ManyToOne // mehrere Rezepte können zu einem Autor gehören
     @JoinColumn(name = "autorID", referencedColumnName = "id")
