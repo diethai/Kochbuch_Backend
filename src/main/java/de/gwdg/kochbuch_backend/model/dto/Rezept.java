@@ -36,7 +36,7 @@ public class Rezept {
     @Column(length = 150)
     private String beschreibung;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "rezept_id")
     private List<Rezeptzutat> rezeptzutaten = new ArrayList<>();
 
