@@ -13,6 +13,7 @@ import java.util.List;
 public class RezeptzutatService {
     private final RezeptzutatRepository rezeptzutatRepository;
 
+
     @Autowired
     public RezeptzutatService(RezeptzutatRepository rezeptzutatRepository) {
         this.rezeptzutatRepository = rezeptzutatRepository;
@@ -38,6 +39,7 @@ public class RezeptzutatService {
     // Update: aktualisiert eine vorhandene Rezeptzutat
     @Transactional
     public Rezeptzutat updateRezeptzutat(Rezeptzutat rezeptzutat) {
+        // Suche nach der vorhandenen Rezeptzutat anhand der ID
         Rezeptzutat existingRezeptzutat = rezeptzutatRepository.findById(rezeptzutat.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Rezeptzutat mit ID " + rezeptzutat.getId() + " nicht gefunden"));
 
@@ -45,7 +47,6 @@ public class RezeptzutatService {
         existingRezeptzutat.setZutatName(rezeptzutat.getZutatName());
         existingRezeptzutat.setGramm(rezeptzutat.getGramm());
         existingRezeptzutat.setMl(rezeptzutat.getMl());
-        existingRezeptzutat.setRezept(rezeptzutat.getRezept());
 
         // Speichern der Änderungen
         return rezeptzutatRepository.save(existingRezeptzutat);
@@ -66,8 +67,4 @@ public class RezeptzutatService {
         return (List<Rezeptzutat>) rezeptzutatRepository.saveAll(rezeptzutaten);
     }
 
-    // Read: liest alle Rezeptzutaten für ein spezifisches Rezept aus
-    public List<Rezeptzutat> getRezeptzutatenForRezept(int rezeptId) {
-        return rezeptzutatRepository.findAllByRezeptId(rezeptId);
-    }
 }

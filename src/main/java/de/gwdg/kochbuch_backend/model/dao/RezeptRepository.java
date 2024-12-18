@@ -2,14 +2,18 @@ package de.gwdg.kochbuch_backend.model.dao;
 
 
 import de.gwdg.kochbuch_backend.model.dto.Rezept;
+import de.gwdg.kochbuch_backend.model.dto.Rezeptzutat;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface RezeptRepository extends CrudRepository<Rezept, Long> {
 
     Optional<Rezept> findById(Long id);
 
-
+    // Beispiel: Findet alle Rezepte, die eine bestimmte Zutat haben
+    List<Rezept> findByRezeptzutatenId(Long id);
 }

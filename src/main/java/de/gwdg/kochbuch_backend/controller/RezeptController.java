@@ -1,10 +1,12 @@
 package de.gwdg.kochbuch_backend.controller;
 
+import com.itextpdf.io.exceptions.IOException;
 import de.gwdg.kochbuch_backend.model.dto.Rezept;
 import de.gwdg.kochbuch_backend.service.RezeptService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -86,5 +88,24 @@ public class RezeptController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found, falls keine Rezepte gefunden wurden
         }
         return new ResponseEntity<>(rezepte, HttpStatus.OK); // 200 OK
+    }
+
+    @GetMapping("/{id}/pdf")
+    public ResponseEntity<byte[]> generateRezeptPdf(@PathVariable Long id) {
+        try {
+            // Aufruf der Methode zur PDF-Erstellung
+            byte[] pdfBytes = rezeptService.generateRezeptPdf(id);
+
+            // PDF als Byte-Array zurückgeben, mit passenden HTTP-Headern
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "application/pdf");
+            headers.add("Content-Disposition", "inline; filename=rezept_" + id + ".pdf");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK); // 200 OK mit PDF im Body
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found, wenn das Rezept nicht existiert
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error bei Fehlern
+        }
     }
 }

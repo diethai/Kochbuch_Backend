@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "rezeptzutaten")
 @Getter
@@ -24,9 +26,8 @@ public class Rezeptzutat {
     @Column(name = "zutat_name", nullable = false)
     private String zutatName;
 
-    @ManyToOne
-    @JoinColumn(name = "rezept_id", nullable = false)
-    private Rezept rezept;
+    @ManyToMany(mappedBy = "rezeptzutaten") // Diese Beziehung wird vom "Rezept" verwaltet
+    private List<Rezept> rezepte;
 
     @Positive(message = "Gramm-Wert muss positiv sein")
     @Column(name = "gramm", nullable = true)

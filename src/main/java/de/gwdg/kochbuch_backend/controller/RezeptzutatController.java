@@ -78,13 +78,5 @@ public class RezeptzutatController {
         return new ResponseEntity<>(neueRezeptzutaten, HttpStatus.CREATED); // 201 Created
     }
 
-    // Read: Alle Rezeptzutaten für ein spezifisches Rezept abrufen
-    @GetMapping("/rezept/{rezeptId}")
-    public ResponseEntity<List<Rezeptzutat>> getRezeptzutatenForRezept(@PathVariable int rezeptId) {
-        List<Rezeptzutat> rezeptzutaten = rezeptzutatService.getRezeptzutatenForRezept(rezeptId);
-        if (rezeptzutaten.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found
-        }
-        return new ResponseEntity<>(rezeptzutaten, HttpStatus.OK); // 200 OK
-    }
+
 }

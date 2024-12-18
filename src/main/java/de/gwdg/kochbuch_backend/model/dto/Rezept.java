@@ -36,10 +36,13 @@ public class Rezept {
     @Column(length = 150)
     private String beschreibung;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "rezept_id")
-    private List<Rezeptzutat> rezeptzutaten = new ArrayList<>();
-
+    @ManyToMany
+    @JoinTable(
+            name = "rezept_rezeptzutat",  // Name der Join-Tabelle
+            joinColumns = @JoinColumn(name = "rezept_id"), // Spalte in der Join-Tabelle für Rezept
+            inverseJoinColumns = @JoinColumn(name = "rezeptzutat_id") // Spalte in der Join-Tabelle für Rezeptzutat
+    )
+    private List<Rezeptzutat> rezeptzutaten;
 
     @ManyToOne // mehrere Rezepte können zu einem Autor gehören
     @JoinColumn(name = "autorID", referencedColumnName = "id")

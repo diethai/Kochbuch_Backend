@@ -1,22 +1,42 @@
 package de.gwdg.kochbuch_backend.service;
 
+
+
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Cell;
+import java.io.ByteArrayOutputStream;
+import java.util.List;
+
+
 import de.gwdg.kochbuch_backend.model.dao.RezeptRepository;
+import de.gwdg.kochbuch_backend.model.dao.RezeptzutatRepository;
 import de.gwdg.kochbuch_backend.model.dto.Rezept;
+import de.gwdg.kochbuch_backend.model.dto.Rezeptzutat;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class RezeptService {
     private final RezeptRepository rezeptRepository;
+    private final RezeptzutatRepository rezeptzutatRepository;
 
     @Autowired
-    public RezeptService(RezeptRepository rezeptRepository) {
+    public RezeptService(RezeptRepository rezeptRepository, RezeptzutatRepository rezeptzutatRepository) {
         this.rezeptRepository = rezeptRepository;
+        this.rezeptzutatRepository = rezeptzutatRepository;
     }
 
     //Create: nimmt ein Rezept Objekt entgegen und speichert dieses in die Oracle Datenbank
@@ -72,6 +92,69 @@ public class RezeptService {
     public Optional<Rezept> getRezepteDesAutors(Long autorId) {
         // Rufe die Methode aus dem RezeptRepository auf, um alle Rezepte des Autors zu erhalten
         return rezeptRepository.findById(autorId);
+    }
+
+
+    public byte[] generateRezeptPdf(Long rezeptId) throws EntityNotFoundException {
+
+        // Rezept und Zutaten abrufen
+        Rezept rezept = getRezeptByID(rezeptId); // Holt das Rezept basierend auf der ID
+        List<Rezeptzutat> zutaten = rezeptzutatRepository.findAllByRezepte_Id(rezeptId); // Zutaten für das Rezept
+
+        // PDF-Erstellung
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        // PDF Writer erstellen
+        PdfWriter writer = new PdfWriter(byteArrayOutputStream);
+
+        // PDF Dokument erstellen
+        PdfDocument pdfDoc = new PdfDocument(writer);
+
+        // Layout Dokument erstellen
+        Document document = new Document(pdfDoc);
+
+        // **Rezeptdetails hinzufügen**
+
+        // Titel des Rezepts
+        String rezeptTitel = "Rezept: " + rezept.getTitel();
+        Paragraph titelParagraph = new Paragraph(rezeptTitel).setFontSize(16);
+        document.add(titelParagraph);
+
+        // Beschreibung
+        String beschreibung = rezept.getBeschreibung();
+        Paragraph beschreibungParagraph = new Paragraph("Beschreibung: " + beschreibung).setFontSize(12);
+        document.add(beschreibungParagraph);
+
+        // Zubereitungszeit
+        String zubereitungszeit = "Zubereitungszeit: " + rezept.getZubereitungszeit() + " Minuten";
+        Paragraph zubereitungszeitParagraph = new Paragraph(zubereitungszeit).setFontSize(12);
+        document.add(zubereitungszeitParagraph);
+
+        // **Zutaten als Tabelle hinzufügen**
+        float[] columnWidths = {300F, 100F, 100F};  // 3 Spalten: Zutat, Gramm, Milliliter
+        Table zutatenTable = new Table(columnWidths);
+
+        // Tabellenüberschrift
+        zutatenTable.addCell(new Cell().add(new Paragraph("Zutat")));  // Hier verwenden wir den add() Aufruf mit Paragraph
+        zutatenTable.addCell(new Cell().add(new Paragraph("Gramm")));
+        zutatenTable.addCell(new Cell().add(new Paragraph("Milliliter")));
+
+        // Zutaten einfügen
+        for (Rezeptzutat zutat : zutaten) {
+            zutatenTable.addCell(new Cell().add(new Paragraph(zutat.getZutatName())));  // Zutat Name
+            zutatenTable.addCell(new Cell().add(new Paragraph(zutat.getGramm() > 0 ? String.valueOf(zutat.getGramm()) : "-")));  // Gramm
+            zutatenTable.addCell(new Cell().add(new Paragraph(zutat.getMl() > 0 ? String.valueOf(zutat.getMl()) : "-")));  // Milliliter
+        }
+
+        // Tabelle zum Dokument hinzufügen
+        document.add(zutatenTable);  // Die Tabelle wird dem Dokument hinzugefügt
+
+        // Dokument schließen
+        document.close();
+        System.out.println("PDF wurde erfolgreich erstellt!");
+
+        // PDF als Byte-Array zurückgeben
+        return byteArrayOutputStream.toByteArray();
     }
 
 }
