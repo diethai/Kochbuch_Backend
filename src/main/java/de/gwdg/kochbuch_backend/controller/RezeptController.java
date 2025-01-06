@@ -1,6 +1,5 @@
 package de.gwdg.kochbuch_backend.controller;
 
-import com.itextpdf.io.exceptions.IOException;
 import de.gwdg.kochbuch_backend.model.dto.Rezept;
 import de.gwdg.kochbuch_backend.service.RezeptService;
 import jakarta.persistence.EntityNotFoundException;
@@ -8,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,21 +25,33 @@ public class RezeptController {
         this.rezeptService = rezeptService;
     }
 
-    // Create: Neues Rezept erstellen
+    /*
+     * Endpunkt zum Erstellen eines neuen Rezepts.
+     * Dieser Endpoint erwartet ein Rezept im Request-Body und erstellt es.
+     * Gibt das neu erstellte Rezept zurück.
+     */
     @PostMapping
     public ResponseEntity<Rezept> createRezept(@RequestBody Rezept rezept) {
         Rezept neuesRezept = rezeptService.createRezept(rezept);
         return new ResponseEntity<>(neuesRezept, HttpStatus.CREATED); // 201 Created
     }
 
-    // Read: Alle Rezepte abrufen
+    /*
+     * Endpunkt zum Abrufen aller Rezepte.
+     * Dieser Endpoint gibt eine Liste aller Rezepte zurück, die in der Datenbank gespeichert sind.
+     * Gibt eine Liste von Rezepten zurück.
+     */
     @GetMapping
     public ResponseEntity<List<Rezept>> getAllRezepte() {
         List<Rezept> rezepte = rezeptService.getAllRezepte();
         return new ResponseEntity<>(rezepte, HttpStatus.OK); // 200 OK
     }
 
-    // Read: Einzelnes Rezept nach ID abrufen
+    /*
+     * Endpunkt zum Abrufen eines einzelnen Rezepts anhand seiner ID.
+     * Dieser Endpoint gibt das Rezept mit der angegebenen ID zurück.
+     * Wenn kein Rezept mit dieser ID gefunden wird, wird ein 404-Fehler zurückgegeben.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Rezept> getRezeptByID(@PathVariable Long id) {
         try {
@@ -50,7 +62,11 @@ public class RezeptController {
         }
     }
 
-    // Update: Rezept aktualisieren
+    /*
+     * Endpunkt zum Aktualisieren eines bestehenden Rezepts.
+     * Dieser Endpoint erwartet ein Rezept im Request-Body, aktualisiert es und gibt das aktualisierte Rezept zurück.
+     * Wenn das Rezept nicht gefunden wird, wird ein 404-Fehler zurückgegeben.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Rezept> updateRezept(@PathVariable Long id, @RequestBody Rezept rezept) {
         try {
@@ -62,7 +78,11 @@ public class RezeptController {
         }
     }
 
-    // Delete: Rezept löschen
+    /*
+     * Endpunkt zum Löschen eines Rezepts anhand seiner ID.
+     * Dieser Endpoint löscht das Rezept mit der angegebenen ID.
+     * Gibt eine 204-Response zurück, wenn das Löschen erfolgreich war, oder einen 404-Fehler, wenn das Rezept nicht gefunden wurde.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRezept(@PathVariable Long id) {
         try {
@@ -73,7 +93,11 @@ public class RezeptController {
         }
     }
 
-    // Create: Mehrere Rezepte auf einmal erstellen
+    /*
+     * Endpunkt zum Erstellen mehrerer Rezepte auf einmal.
+     * Dieser Endpoint erwartet eine Liste von Rezepten im Request-Body und erstellt diese.
+     * Gibt die Liste der neu erstellten Rezepte zurück.
+     */
     @Transactional
     @PostMapping("/multiple")
     public ResponseEntity<List<Rezept>> createRezepte(@RequestBody List<Rezept> rezepte) {
@@ -81,6 +105,11 @@ public class RezeptController {
         return new ResponseEntity<>(neueRezepte, HttpStatus.CREATED); // 201 Created
     }
 
+    /*
+     * Endpunkt zum Abrufen der Rezepte eines bestimmten Autors.
+     * Dieser Endpoint gibt alle Rezepte eines bestimmten Autors zurück.
+     * Falls keine Rezepte für diesen Autor gefunden werden, wird ein 404-Fehler zurückgegeben.
+     */
     @GetMapping("/author/{authorName}")
     public ResponseEntity<Optional<Rezept>> getRezepteByAuthor(@PathVariable long id) {
         Optional<Rezept> rezepte = rezeptService.getRezepteDesAutors(id);
@@ -90,25 +119,36 @@ public class RezeptController {
         return new ResponseEntity<>(rezepte, HttpStatus.OK); // 200 OK
     }
 
+    /*
+     * Endpunkt zum Generieren einer PDF für ein Rezept.
+     * Dieser Endpoint ruft die Methode zur Erstellung einer PDF für das Rezept mit der angegebenen ID auf.
+     * Gibt die PDF als Antwort im Body zurück, zusammen mit den passenden Headern für den Dateityp.
+     */
     @GetMapping("/{id}/pdf")
     public ResponseEntity<byte[]> generateRezeptPdf(@PathVariable Long id) {
         try {
-            // Aufruf der Methode zur PDF-Erstellung
+            // PDF-Daten für das Rezept generieren
             byte[] pdfBytes = rezeptService.generateRezeptPdf(id);
 
-            // PDF als Byte-Array zurückgeben, mit passenden HTTP-Headern
+            // HTTP-Header für die PDF-Antwort setzen
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Type", "application/pdf");
-            headers.add("Content-Disposition", "inline; filename=rezept_" + id + ".pdf");
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("inline", "rezept_" + id + ".pdf");
 
-            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK); // 200 OK mit PDF im Body
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK); // Erfolgreiche Antwort mit PDF
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found, wenn das Rezept nicht existiert
-        } catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error bei Fehlern
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404: Rezept nicht gefunden
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500: Allgemeiner Fehler
         }
     }
 
+    /*
+     * Endpunkt zum Drucken eines Rezepts als PDF.
+     * Dieser Endpoint ruft die Methode auf, die das Rezept als PDF druckt.
+     * Gibt eine Bestätigung zurück, dass der Druckauftrag erfolgreich gestartet wurde.
+     * Falls das Rezept nicht gefunden wird, gibt es einen 404-Fehler zurück.
+     */
     @PostMapping("/{id}/print")
     public ResponseEntity<Void> printRezeptPdf(@PathVariable Long id) {
         try {
@@ -126,5 +166,4 @@ public class RezeptController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error
         }
     }
-
 }
