@@ -75,12 +75,17 @@ public class AutorController {                                       /* Die Klas
 
     // Endpunkt für die POST-Anfrage zum Erstellen mehrerer Autoren gleichzeitig
     @PostMapping("create/many")
-    @Transactional                                                                               //Die Transaktion wird verwendet, um sicherzustellen, dass alle Autoren gleichzeitig in die Datenbank hinzugefügt werden
+    @Transactional  // Die Transaktion stellt sicher, dass alle Autoren in einem Schritt gespeichert werden
     public ResponseEntity<List<Autor>> createManyAutoren(@RequestBody List<Autor> autoren) {
-        // Erstelle eine Liste der neuen Autoren
-        List<Autor> neueAutoren = autorService.createManyAutoren(autoren);
-        // Richte eine erfolgreiche Antwort mit den neuen Autoren ein
-        return new ResponseEntity<>(neueAutoren, HttpStatus.CREATED);
+        try {
+            // Erstelle eine Liste der neuen Autoren
+            List<Autor> neueAutoren = autorService.createManyAutoren(autoren);
+            // Erfolgreiche Antwort zurückgeben
+            return new ResponseEntity<>(neueAutoren, HttpStatus.CREATED);
+        } catch (Exception e) {
+            // Fehlerbehandlung, falls etwas schief geht
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

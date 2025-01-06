@@ -29,12 +29,12 @@ public class Rezeptzutat {
     @ManyToMany(mappedBy = "rezeptzutaten") // Diese Beziehung wird vom "Rezept" verwaltet
     private List<Rezept> rezepte;
 
-    @Positive(message = "Gramm-Wert muss positiv sein")
-    @Column(name = "gramm", nullable = true)
+
+    @Column(name = "gramm")
     private long gramm;
 
-    @Positive(message = "Milliliter-Wert muss positiv sein")
-    @Column(name = "ml", nullable = true)
+
+    @Column(name = "ml")
     private long ml;
 }
 
