@@ -162,7 +162,7 @@ public class RezeptService {
         return byteArrayOutputStream.toByteArray();
     }
 
-    public void printRezeptPdf(Long rezeptId) {
+    public void printRezeptPdf(Long rezeptId) { // Diese Methode nutzt generateRezeptPdf um eine PDF zu generieren und diese dann auszudrucken
         try {
             // PDF generieren und direkt als InputStream nutzen
             InputStream pdfInputStream = new ByteArrayInputStream(generateRezeptPdf(rezeptId));

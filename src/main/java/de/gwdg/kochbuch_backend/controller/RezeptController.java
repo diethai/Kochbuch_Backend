@@ -108,4 +108,23 @@ public class RezeptController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error bei Fehlern
         }
     }
+
+    @PostMapping("/{id}/print")
+    public ResponseEntity<Void> printRezeptPdf(@PathVariable Long id) {
+        try {
+            // Aufruf der Methode zum Drucken der PDF
+            rezeptService.printRezeptPdf(id);
+
+            // Rückmeldung, dass der Druck erfolgreich gestartet wurde
+            return new ResponseEntity<>(HttpStatus.OK); // 200 OK
+        } catch (EntityNotFoundException e) {
+            // Wenn das Rezept nicht gefunden wurde
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found
+        } catch (Exception e) {
+            // Für allgemeine Fehler
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error
+        }
+    }
+
 }
