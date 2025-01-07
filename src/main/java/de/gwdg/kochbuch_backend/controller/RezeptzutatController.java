@@ -23,21 +23,21 @@ public class RezeptzutatController {
     }
 
     // Create: Neue Rezeptzutat erstellen
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Rezeptzutat> createRezeptzutat(@RequestBody Rezeptzutat rezeptzutat) {
         Rezeptzutat neueRezeptzutat = rezeptzutatService.createRezeptzutat(rezeptzutat);
         return new ResponseEntity<>(neueRezeptzutat, HttpStatus.CREATED); // 201 Created
     }
 
     // Read: Alle Rezeptzutaten abrufen
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<Rezeptzutat>> getAllRezeptzutaten() {
         List<Rezeptzutat> rezeptzutaten = rezeptzutatService.getAllRezeptzutaten();
         return new ResponseEntity<>(rezeptzutaten, HttpStatus.OK); // 200 OK
     }
 
     // Read: Einzelne Rezeptzutat nach ID abrufen
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<Rezeptzutat> getRezeptzutatByID(@PathVariable int id) {
         try {
             Rezeptzutat rezeptzutat = rezeptzutatService.getRezeptzutatByID(id);
@@ -48,7 +48,7 @@ public class RezeptzutatController {
     }
 
     // Update: Rezeptzutat aktualisieren
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Rezeptzutat> updateRezeptzutat(@PathVariable int id, @RequestBody Rezeptzutat rezeptzutat) {
         try {
             rezeptzutat.setId(id); // Setze die ID auf das übergebene ID-Path-Variable
@@ -60,7 +60,7 @@ public class RezeptzutatController {
     }
 
     // Delete: Rezeptzutat löschen
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteRezeptzutat(@PathVariable int id) {
         try {
             rezeptzutatService.deleteRezeptzutat(id);

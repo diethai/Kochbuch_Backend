@@ -30,7 +30,7 @@ public class RezeptController {
      * Dieser Endpoint erwartet ein Rezept im Request-Body und erstellt es.
      * Gibt das neu erstellte Rezept zurück.
      */
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Rezept> createRezept(@RequestBody Rezept rezept) {
         Rezept neuesRezept = rezeptService.createRezept(rezept);
         return new ResponseEntity<>(neuesRezept, HttpStatus.CREATED); // 201 Created
@@ -41,7 +41,7 @@ public class RezeptController {
      * Dieser Endpoint gibt eine Liste aller Rezepte zurück, die in der Datenbank gespeichert sind.
      * Gibt eine Liste von Rezepten zurück.
      */
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<Rezept>> getAllRezepte() {
         List<Rezept> rezepte = rezeptService.getAllRezepte();
         return new ResponseEntity<>(rezepte, HttpStatus.OK); // 200 OK
@@ -52,7 +52,7 @@ public class RezeptController {
      * Dieser Endpoint gibt das Rezept mit der angegebenen ID zurück.
      * Wenn kein Rezept mit dieser ID gefunden wird, wird ein 404-Fehler zurückgegeben.
      */
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<Rezept> getRezeptByID(@PathVariable Long id) {
         try {
             Rezept rezept = rezeptService.getRezeptByID(id);
@@ -67,7 +67,7 @@ public class RezeptController {
      * Dieser Endpoint erwartet ein Rezept im Request-Body, aktualisiert es und gibt das aktualisierte Rezept zurück.
      * Wenn das Rezept nicht gefunden wird, wird ein 404-Fehler zurückgegeben.
      */
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Rezept> updateRezept(@PathVariable Long id, @RequestBody Rezept rezept) {
         try {
             rezept.setId(id); // Setze die ID auf das übergebene ID-Path-Variable
@@ -83,7 +83,7 @@ public class RezeptController {
      * Dieser Endpoint löscht das Rezept mit der angegebenen ID.
      * Gibt eine 204-Response zurück, wenn das Löschen erfolgreich war, oder einen 404-Fehler, wenn das Rezept nicht gefunden wurde.
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteRezept(@PathVariable Long id) {
         try {
             rezeptService.deleteRezept(id);
