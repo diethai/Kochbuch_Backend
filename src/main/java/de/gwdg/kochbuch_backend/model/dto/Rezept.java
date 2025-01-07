@@ -33,7 +33,7 @@ public class Rezept {
     private String titel;
 
     @NotNull(message = "Die Beschreibung darf nicht leer sein")
-    @Column(length = 1000)
+    @Column(length = 10000)
     private String beschreibung;
 
     @ManyToMany
