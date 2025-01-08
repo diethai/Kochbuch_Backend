@@ -3,6 +3,7 @@ package de.gwdg.kochbuch_backend.test;
 
 // Importieren von Klassen und Paketen, die für den Test benötigt werden
 import de.gwdg.kochbuch_backend.controller.AutorController; // Controller, der getestet wird
+import de.gwdg.kochbuch_backend.model.dao.AutorRepository;
 import de.gwdg.kochbuch_backend.model.dto.Autor; // DTO-Klasse für Autor
 import de.gwdg.kochbuch_backend.service.AutorService; // Service-Klasse, die vom Controller verwendet wird
 import de.gwdg.kochbuch_backend.setup.builder.AutorOptionsObject; // Hilfsklasse zum Erstellen von Testobjekten

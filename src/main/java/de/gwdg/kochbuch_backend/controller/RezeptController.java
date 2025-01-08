@@ -143,27 +143,4 @@ public class RezeptController {
         }
     }
 
-    /*
-     * Endpunkt zum Drucken eines Rezepts als PDF.
-     * Dieser Endpoint ruft die Methode auf, die das Rezept als PDF druckt.
-     * Gibt eine Bestätigung zurück, dass der Druckauftrag erfolgreich gestartet wurde.
-     * Falls das Rezept nicht gefunden wird, gibt es einen 404-Fehler zurück.
-     */
-    @PostMapping("/{id}/print")
-    public ResponseEntity<Void> printRezeptPdf(@PathVariable Long id) {
-        try {
-            // Aufruf der Methode zum Drucken der PDF
-            rezeptService.printRezeptPdf(id);
-
-            // Rückmeldung, dass der Druck erfolgreich gestartet wurde
-            return new ResponseEntity<>(HttpStatus.OK); // 200 OK
-        } catch (EntityNotFoundException e) {
-            // Wenn das Rezept nicht gefunden wurde
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found
-        } catch (Exception e) {
-            // Für allgemeine Fehler
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error
-        }
-    }
 }
