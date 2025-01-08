@@ -11,7 +11,9 @@ import org.junit.jupiter.api.DisplayName; // Ermöglicht benutzerfreundliche Tes
 import org.junit.jupiter.api.Test; // Annotation zum Markieren von Testmethoden
 import org.springframework.beans.factory.annotation.Autowired; // Injection von abhängigen Komponenten
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs; // Aktiviert Spring REST Docs
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest; // Testkonfiguration für Web-Controller
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType; // Stellt HTTP-Medientypen bereit
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders; // Baut HTTP-Anfragen für REST Docs
 import org.springframework.restdocs.payload.FieldDescriptor; // Beschreibt die Felder in API-Dokumentationen
@@ -28,8 +30,11 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*; // Do
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status; // Überprüfung von HTTP-Statuscodes
 
 // Testklasse, die Web-Controller von Spring Boot testet
-@WebMvcTest(AutorController.class) // Fokussiert sich nur auf den AutorController
-@AutoConfigureRestDocs // Aktiviert automatische REST-Dokumentation
+//@WebMvcTest(AutorController.class) // Fokussiert sich nur auf den AutorController
+//@AutoConfigureRestDocs // Aktiviert automatische REST-Dokumentation
+@AutoConfigureMockMvc
+@AutoConfigureRestDocs
+@SpringBootTest // lädt mehr wie WebMvcTest ?
 public class AutorControllerTest {
 
     // Konstanten für die Beschreibungen von Feldern in der Dokumentation
