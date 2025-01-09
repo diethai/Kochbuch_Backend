@@ -46,4 +46,6 @@ public class Rezept {
     private Autor autor;
 
     private double zubereitungszeit; // in Minuten
+
+    private String BildURL;
 }
