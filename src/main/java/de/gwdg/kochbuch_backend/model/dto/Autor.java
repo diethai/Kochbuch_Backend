@@ -29,6 +29,7 @@ public class Autor {         /* Die Klasse "Autor" wird definiert */
     @NotNull(message = "Autorname darf nicht null sein")
     private String autorName; /* Der Name des Autors ist eine Zeichenkette */
 
+    private String BildURL;
 }
 
 

@@ -36,5 +36,7 @@ public class Rezeptzutat {
 
     @Column(name = "ml")
     private long ml;
+
+    private String BildURL;
 }
 
