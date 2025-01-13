@@ -2,7 +2,6 @@ package de.gwdg.kochbuch_backend.model.dao;
 
 
 import de.gwdg.kochbuch_backend.model.dto.Rezept;
-import de.gwdg.kochbuch_backend.model.dto.Rezeptzutat;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
