@@ -36,11 +36,10 @@ public class Rezept {
 
     @ManyToMany
     @JoinTable(
-            name = "rezept_rezeptzutaten", // Name der Zwischentabelle
-            joinColumns = @JoinColumn(name = "rezept_id"), // FK zur Tabelle "rezepte"
-            inverseJoinColumns = @JoinColumn(name = "rezeptzutat_id") // FK zur Tabelle "rezeptzutaten"
+            name = "rezept_rezeptzutaten",
+            joinColumns = @JoinColumn(name = "rezept_id"),
+            inverseJoinColumns = @JoinColumn(name = "rezeptzutat_id")
     )
-    @JsonManagedReference
     private List<Rezeptzutat> rezeptzutaten;
 
     @ManyToOne // mehrere Rezepte können zu einem Autor gehören
