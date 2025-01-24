@@ -33,7 +33,7 @@ public class Rezeptzutat {
     private long gramm;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "rezeptzutaten")
+    @ManyToMany(mappedBy = "rezeptzutaten", fetch = FetchType.LAZY)
     private List<Rezept> rezepte;
 
 
