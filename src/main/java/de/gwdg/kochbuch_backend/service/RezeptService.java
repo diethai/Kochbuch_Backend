@@ -56,9 +56,28 @@ public class RezeptService {
     }
 
     // liest das Rezept mit der spezifischen ID aus
-    public Rezept getRezeptByID(Long id) throws EntityNotFoundException {
-        return rezeptRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Rezept mit ID " + id + " nicht gefunden"));
+    public Rezept getRezeptById(long id) {
+        Rezept rezept = rezeptRepository.findById(id).orElseThrow(() -> new RuntimeException("Rezept nicht gefunden"));
+
+        Rezept rezeptDTO = new Rezept();
+        rezeptDTO.setId(rezept.getId());
+        rezeptDTO.setTitel(rezept.getTitel());
+        rezeptDTO.setBeschreibung(rezept.getBeschreibung());
+        rezeptDTO.setZubereitungszeit(rezept.getZubereitungszeit());
+
+        // Rezeptzutaten in DTO umwandeln
+        List<Rezeptzutat> rezeptzutatDTOs = rezept.getRezeptzutaten().stream().map(zutat -> {
+            Rezeptzutat dto = new Rezeptzutat();
+            dto.setId(zutat.getId());
+            dto.setZutatName(zutat.getZutatName());
+            dto.setGramm(zutat.getGramm());
+            dto.setMl(zutat.getMl());
+            return dto;
+        }).toList();
+
+        rezeptDTO.setRezeptzutaten(rezeptzutatDTOs);
+
+        return rezeptDTO;
     }
 
     //Update: updated das übergebene Rezept Objekt
@@ -103,7 +122,7 @@ public class RezeptService {
     public byte[] generateRezeptPdf(Long rezeptId) throws EntityNotFoundException {
 
         // Rezept und Zutaten abrufen
-        Rezept rezept = getRezeptByID(rezeptId); // Holt das Rezept basierend auf der ID
+        Rezept rezept = getRezeptById(rezeptId); // Holt das Rezept basierend auf der ID
         List<Rezeptzutat> zutaten = rezeptzutatRepository.findAllByRezepte_Id(rezeptId); // Zutaten für das Rezept
 
         // PDF-Erstellung

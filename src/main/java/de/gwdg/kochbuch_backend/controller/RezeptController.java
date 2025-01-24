@@ -55,7 +55,7 @@ public class RezeptController {
     @GetMapping("/get/{id}")
     public ResponseEntity<Rezept> getRezeptByID(@PathVariable Long id) {
         try {
-            Rezept rezept = rezeptService.getRezeptByID(id);
+            Rezept rezept = rezeptService.getRezeptById(id);
             return new ResponseEntity<>(rezept, HttpStatus.OK); // 200 OK
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found

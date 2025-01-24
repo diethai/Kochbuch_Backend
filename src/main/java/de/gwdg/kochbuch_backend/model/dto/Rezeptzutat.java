@@ -1,5 +1,6 @@
 package de.gwdg.kochbuch_backend.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -7,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+
 
 import java.util.List;
 
@@ -26,13 +29,12 @@ public class Rezeptzutat {
     @Column(name = "zutat_name", nullable = false)
     private String zutatName;
 
-    @ManyToMany(mappedBy = "rezeptzutaten") // Diese Beziehung wird vom "Rezept" verwaltet
-    private List<Rezept> rezepte;
-
-
     @Column(name = "gramm")
     private long gramm;
 
+    @ManyToMany(mappedBy = "rezeptzutaten") // Bidirektionale Beziehung
+    @JsonBackReference
+    private List<Rezept> rezepte;
 
     @Column(name = "ml")
     private long ml;

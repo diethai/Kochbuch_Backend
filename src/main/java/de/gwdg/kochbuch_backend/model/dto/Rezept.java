@@ -1,5 +1,6 @@
 package de.gwdg.kochbuch_backend.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
@@ -35,10 +36,11 @@ public class Rezept {
 
     @ManyToMany
     @JoinTable(
-            name = "rezept_rezeptzutat",  // Name der Join-Tabelle
-            joinColumns = @JoinColumn(name = "rezept_id"), // Spalte in der Join-Tabelle für Rezept
-            inverseJoinColumns = @JoinColumn(name = "rezeptzutat_id") // Spalte in der Join-Tabelle für Rezeptzutat
+            name = "rezept_rezeptzutaten", // Name der Zwischentabelle
+            joinColumns = @JoinColumn(name = "rezept_id"), // FK zur Tabelle "rezepte"
+            inverseJoinColumns = @JoinColumn(name = "rezeptzutat_id") // FK zur Tabelle "rezeptzutaten"
     )
+    @JsonManagedReference
     private List<Rezeptzutat> rezeptzutaten;
 
     @ManyToOne // mehrere Rezepte können zu einem Autor gehören
