@@ -30,6 +30,9 @@ public class Autor {         /* Die Klasse "Autor" wird definiert */
     private String autorName; /* Der Name des Autors ist eine Zeichenkette */
 
     private String BildURL;
+
+    public Autor(Integer id, String autorName) {
+    }
 }
 
 
