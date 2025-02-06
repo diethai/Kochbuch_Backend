@@ -10,11 +10,9 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Cell;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.List;
 
+import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 import de.gwdg.kochbuch_backend.model.dao.RezeptRepository;
 import de.gwdg.kochbuch_backend.model.dao.RezeptzutatRepository;
@@ -25,12 +23,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import javax.print.*;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.Copies;
-import javax.print.attribute.standard.Sides;
 import java.util.Optional;
 
 @Service
@@ -180,45 +172,4 @@ public class RezeptService {
         // PDF als Byte-Array zurückgeben
         return byteArrayOutputStream.toByteArray();
     }
-
-    public void printRezeptPdf(Long rezeptId) { // Diese Methode nutzt generateRezeptPdf um eine PDF zu generieren und diese dann auszudrucken
-        try {
-            // PDF generieren und direkt als InputStream nutzen
-            InputStream pdfInputStream = new ByteArrayInputStream(generateRezeptPdf(rezeptId));
-
-            // Ein DocFlavor für PDF definieren
-            DocFlavor docFlavor = DocFlavor.INPUT_STREAM.PDF;
-
-            // Druckservice suchen, der PDF unterstützt
-            PrintService[] printServices = PrintServiceLookup.lookupPrintServices(docFlavor, null);
-            if (printServices.length == 0) {
-                throw new PrintException("Kein kompatibler Drucker gefunden.");
-            }
-
-            // Den ersten verfügbaren Drucker auswählen (alternativ kann ein spezifischer Drucker gewählt werden)
-            PrintService printService = printServices[0];
-
-            // Druckauftrag erstellen
-            DocPrintJob printJob = printService.createPrintJob();
-
-            // PDF als Doc vorbereiten
-            Doc pdfDoc = new SimpleDoc(pdfInputStream, docFlavor, null);
-
-            // Druckattribute definieren (optional)
-            PrintRequestAttributeSet attributes = new HashPrintRequestAttributeSet();
-            attributes.add(new Copies(1)); // Anzahl der Kopien
-            attributes.add(Sides.ONE_SIDED); // Einseitiger Druck
-
-            // Druckauftrag senden
-            printJob.print(pdfDoc, attributes);
-
-            System.out.println("PDF wurde erfolgreich gedruckt.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Fehler beim Drucken der PDF: " + e.getMessage());
-        }
-    }
-
-
-
 }
