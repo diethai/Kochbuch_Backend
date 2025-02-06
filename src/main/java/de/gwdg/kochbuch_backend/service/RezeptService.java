@@ -42,6 +42,7 @@ public class RezeptService {
         return rezeptRepository.save(rezept);
     }
 
+
     //Read: liest alle Rezept Objekte aus der Datenbank
     public List<Rezept> getAllRezepte() {
         return (List<Rezept>) rezeptRepository.findAll();
